@@ -1,0 +1,226 @@
+<!doctype html>
+
+<html lang="bn">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>TOPPERS EXAM — Multi‑page (Hash Routing)</title>
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bangla:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root{--glass:rgba(255,255,255,0.03);--muted:#9fb0c8}
+    body{font-family:'Noto Sans Bangla',system-ui,Segoe UI,Arial;background:linear-gradient(135deg,#0f1724 0%, #04203a 50%, #021428 100%);color:#eef7ff;min-height:100vh}
+    .card-ghost{background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);border:1px solid rgba(255,255,255,0.04)}
+    .nav-title{font-weight:700;font-size:20px}
+    a.btn-subject{width:100%;text-align:left}
+    .back-btn{cursor:pointer}
+    .fade-in{animation:fade .18s ease both}
+    @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark" style="background:linear-gradient(90deg, rgba(59,130,246,0.18), rgba(139,92,246,0.12))">
+    <div class="container">
+      <a class="navbar-brand nav-title" href="#/">TOPPERS EXAM</a>
+      <div class="ms-auto text-muted small">Bootstrap + Linear Gradient</div>
+    </div>
+  </nav>  <main class="container py-4" id="app">
+    <!-- content injected by JS -->
+  </main>  <footer class="text-center py-3 text-muted small">&copy; TOPPERS EXAM</footer><script>
+// Simple hash-router to simulate separate pages (so each click opens a separate page URL)
+// Routes:
+// #/                -> Home (classes)
+// #/class/CLASS 8   -> Subjects for given class
+// #/class/CLASS 8/subject/বাংলা  -> Chapters for subject
+// #/class/CLASS 8/subject/বাংলা/chapter/অধ্যায় ১  -> Resources (MCQ/NOTES/TEST PAPER)
+
+const DATA = {
+  "CLASS 8": {
+    "বাংলা": [
+      "বোঝাপড়া – রবীন্দ্রনাথ ঠাকুর",
+      "অদ্ভুত আতিথেয়তা – ঈশ্বরচন্দ্র বিদ্যাসাগর",
+      "চন্দ্রগুপ্ত – দ্বিজেন্দ্রলাল রায়",
+      "বনভোজনের ব্যাপার – নারায়ণ গঙ্গোপাধ্যায়",
+      "সবুজ জামা – বীরেন্দ্র চট্টোপাধ্যায়",
+      "চিঠি – মাইকেল মধুসূদন দত্ত",
+      "পরবাসী – বিষ্ণু দে",
+      "পথচলতি – সুনীতিকুমার চট্টোপাধ্যায়",
+      "একটি চড়ুই পাখি – তারাপদ রায়",
+      "দাঁড়াও – শক্তি চট্টোপাধ্যায়",
+      "ছন্নছাড়া – অচিন্ত্যকুমার সেনগুপ্ত",
+      "পল্লীসমাজ – শরৎচন্দ্র চট্টোপাধ্যায়",
+      "গাছের কথা – জগদীশচন্দ্র বসু",
+      "হাওয়ার গান – বুদ্ধদেব বসু",
+      "কী করে বুঝব – আশাপূর্ণা দেবী",
+      "পাড়াগাঁর দু-পহর ভালোবাসি – জীবনানন্দ দাশ",
+      "নাটোরের কথা – অবনীন্দ্রনাথ ঠাকুর",
+      "গড়াই নদীর তীরে – জসীমউদ্দীন",
+      "জেলখানার চিঠি – সুভাষচন্দ্র বসু",
+      "আদাব – সমরেশ বসু",
+      "শিকল-পরার গান – কাজী নজরুল ইসলাম",
+      "স্বাধীনতা – ল্যাংস্টন হিউজ",
+      "অনলাইন বই",
+      "হরিচরণ বন্দ্যোপাধ্যায় – হীরেন্দ্রনাথ দত্ত",
+      "ঘুরে দাঁড়াও – প্রণবেন্দু দাশগুপ্ত",
+      "সুভা – রবীন্দ্রনাথ ঠাকুর",
+      "পরাজয় – শান্তিপ্রিয় বন্দ্যোপাধ্যায়",
+      "টিকিটের অ্যালবাম – সুন্দর রামস্বামী",
+      "মাসিপিসি – জয় গোস্বামী",
+      "লোকটা জানলই না – সুভাষ মুখোপাধ্যায়"
+    ],
+    "English": [
+    "The Wind Cap",
+    "Clouds",
+    "An April Day",
+    "The Great Escape",
+    "Princess September",
+    "The Sea",
+    "A King’s Tale",
+    "The Happy Prince",
+    "Summer Friends",
+    "Tales of Childhood",
+    "Midnight Express",
+    "WBBSE বই",
+    "Someone",
+    "The Man Who Planted Trees"
+  ]
+    "Math": ["অধ্যায় ১: সংখ্যা পদ্ধতি","অধ্যায় ২: জ্যামিতি"]
+  },
+  "CLASS 9": {
+    "বাংলা": ["অধ্যায় ১","অধ্যায় ২"],
+    "Science": ["Chapter 1: Biology","Chapter 2: Physics"],
+    "History": ["Chapter 1: Ancient","Chapter 2: Medieval"]
+  },
+  "CLASS 10": {
+    "বাংলা": ["অধ্যায় ১","অধ্যায় ২"],
+    "Physics": ["Chapter 1: Motion","Chapter 2: Force"],
+    "Chemistry": ["Chapter 1: Matter","Chapter 2: Reactions"]
+  }
+};
+
+const app = document.getElementById('app');
+
+function qEscape(s){ return encodeURIComponent(s).replace(/%20/g,'+'); }
+function qUnescape(s){ try{ return decodeURIComponent(s.replace(/\+/g,' ')); }catch(e){return s;} }
+
+function navTo(hash){ location.hash = hash; }
+
+function renderHome(){
+  app.innerHTML = '';
+  const row = document.createElement('div'); row.className='row g-3';
+  Object.keys(DATA).forEach(cls=>{
+    const col = document.createElement('div'); col.className='col-12 col-md-4';
+    col.innerHTML = `
+      <div class="card card-ghost p-3 shadow-sm fade-in">
+        <div class="d-flex align-items-center justify-content-between">
+          <div>
+            <div class="h5 mb-1">${cls}</div>
+            <div class="text-muted small">${Object.keys(DATA[cls]).length} টি বিষয়</div>
+          </div>
+          <div>
+            <button class="btn btn-outline-light" data-class="${qEscape(cls)}">খুলুন <i class="fa-solid fa-arrow-right ms-1"></i></button>
+          </div>
+        </div>
+      </div>`;
+    row.appendChild(col);
+  });
+  app.appendChild(row);
+
+  // attach handlers
+  app.querySelectorAll('button[data-class]').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      const cls = qUnescape(b.getAttribute('data-class'));
+      navTo(`#/class/${qEscape(cls)}`);
+    });
+  });
+}
+
+function renderSubjects(cls){
+  app.innerHTML = '';
+  const back = document.createElement('div'); back.className='mb-3';
+  back.innerHTML = `<button class="btn btn-sm btn-light back-btn"><i class="fa-solid fa-arrow-left"></i> Back</button>`;
+  back.querySelector('.back-btn').addEventListener('click', ()=> navTo('#/'));
+  app.appendChild(back);
+
+  const header = document.createElement('div'); header.className='mb-3';
+  header.innerHTML = `<h4>${cls}</h4><div class="text-muted small">বিষয় নির্বাচন করুন</div>`;
+  app.appendChild(header);
+
+  const list = document.createElement('div'); list.className='list-group';
+  Object.keys(DATA[cls]).forEach(sub=>{
+    const a = document.createElement('a');
+    a.className='list-group-item list-group-item-action d-flex justify-content-between align-items-center';
+    a.href = `#/class/${qEscape(cls)}/subject/${qEscape(sub)}`;
+    a.innerHTML = `<div><i class="fa-solid fa-book-open me-2"></i> ${sub}</div><small class="text-muted">${DATA[cls][sub].length} টি অধ্যায়</small>`;
+    list.appendChild(a);
+  });
+  app.appendChild(list);
+}
+
+function renderChapters(cls, subject){
+  app.innerHTML='';
+  const nav = document.createElement('div'); nav.className='mb-3';
+  nav.innerHTML = `<button class="btn btn-sm btn-light back-btn"><i class="fa-solid fa-arrow-left"></i> Back</button>`;
+  nav.querySelector('.back-btn').addEventListener('click', ()=> navTo(`#/class/${qEscape(cls)}`));
+  app.appendChild(nav);
+
+  const h = document.createElement('div'); h.className='mb-3'; h.innerHTML = `<h4>${subject}</h4><div class="text-muted small">অধ্যায় নির্বাচন করুন</div>`;
+  app.appendChild(h);
+
+  const row = document.createElement('div'); row.className='row g-2';
+  DATA[cls][subject].forEach((ch, idx)=>{
+    const col = document.createElement('div'); col.className='col-12 col-md-6';
+    const card = document.createElement('div'); card.className='card card-ghost p-2';
+    card.innerHTML = `<div class="d-flex justify-content-between align-items-center"><div><strong>${idx+1}. ${ch}</strong></div><div><a class="btn btn-sm btn-outline-light" href="#/class/${qEscape(cls)}/subject/${qEscape(subject)}/chapter/${qEscape(ch)}">View</a></div></div>`;
+    col.appendChild(card); row.appendChild(col);
+  });
+  app.appendChild(row);
+}
+
+function renderResources(cls, subject, chapter){
+  app.innerHTML='';
+  const nav = document.createElement('div'); nav.className='mb-3';
+  nav.innerHTML = `<button class="btn btn-sm btn-light back-btn"><i class="fa-solid fa-arrow-left"></i> Back</button>`;
+  nav.querySelector('.back-btn').addEventListener('click', ()=> navTo(`#/class/${qEscape(cls)}/subject/${qEscape(subject)}`));
+  app.appendChild(nav);
+
+  const h = document.createElement('div'); h.className='mb-3'; h.innerHTML = `<h4>${chapter}</h4><div class="text-muted small">${cls} → ${subject}</div>`;
+  app.appendChild(h);
+
+  const group = document.createElement('div'); group.className='d-flex gap-2 flex-wrap';
+  ['MCQ','NOTES','TEST PAPER'].forEach(r=>{
+    const b = document.createElement('a');
+    b.className='btn btn-lg btn-outline-light';
+    b.href='#';
+    b.textContent = r;
+    b.addEventListener('click',(ev)=>{ev.preventDefault(); alert(`${cls} → ${subject} → ${chapter} → ${r}`);});
+    group.appendChild(b);
+  });
+  app.appendChild(group);
+}
+
+// Router: parse hash and render
+function router(){
+  const hash = location.hash || '#/';
+  const parts = hash.slice(2).split('/').map(s=> s? qUnescape(s): '');
+  // parts example: ['class','CLASS 8','subject','বাংলা','chapter','অধ্যায় ১']
+  if(parts.length===0 || parts[0]==='') return renderHome();
+  if(parts[0]==='class' && parts.length===2){
+    const cls = parts[1]; if(DATA[cls]) return renderSubjects(cls);
+  }
+  if(parts[0]==='class' && parts[2]==='subject' && parts.length===4){
+    const cls=parts[1], subject=parts[3]; if(DATA[cls] && DATA[cls][subject]) return renderChapters(cls,subject);
+  }
+  if(parts[0]==='class' && parts[2]==='subject' && parts[4]==='chapter' && parts.length===6){
+    const cls=parts[1], subject=parts[3], chapter=parts[5]; if(DATA[cls] && DATA[cls][subject] && DATA[cls][subject].includes(chapter)) return renderResources(cls,subject,chapter);
+  }
+  // fallback
+  renderHome();
+}
+
+window.addEventListener('hashchange', router);
+window.addEventListener('load', router);
+</script><!-- Bootstrap JS --><script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script></body>
+  </html>
